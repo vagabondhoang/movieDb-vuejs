@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import axios from 'axios'
 import AppSpinner from './AppSpinner'
 import { URL_LIST, API_KEY, URL_IMG, IMG_SIZE_AVERAGE } from '../utils/constants.js'
@@ -44,7 +43,7 @@ export default {
 
   computed: {
     filmChunks () {
-      return _.chunk(Object.values(this.filmList), 4)
+      return this.chunk(Object.values(this.filmList), 4)
     }
   },
 
@@ -62,6 +61,16 @@ export default {
       .finally(() => {
         this.loading = false
       })
+  },
+
+  methods: {
+    chunk (input, size) {
+      return input.reduce((arr, item, idx) => {
+        return idx % size === 0
+          ? [...arr, [item]]
+          : [...arr.slice(0, -1), [...arr.slice(-1)[0], item]]
+      }, [])
+    }
   }
 }
 </script>
