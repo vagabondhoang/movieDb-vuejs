@@ -7,14 +7,15 @@
       </p>
     </section>
     <section v-else class="main-poster">
-      <div v-if="loading"><AppSpinner /></div>
-      <div v-else v-for="chunk in filmChunks" :key="chunk" class="row">
+      <div v-if="asyncDataStatusReady" v-for="(chunk, idx) in filmChunks" :key="idx" class="row">
         <div v-for="film in chunk" :key="film.id" class="col-sm-3">
-          <img
-            :src="`${URL_IMG}${IMG_SIZE_AVERAGE}${film.backdrop_path}`" 
-            :alt="film.title"
-            :id="film.id"
-          >
+          <router-link :to="{name: 'FilmDetail', params: {id: film.id}}">
+            <img
+              :src="`${URL_IMG}${IMG_SIZE_AVERAGE}${film.backdrop_path}`" 
+              :alt="film.title"
+              :id="film.id"
+            >
+          </router-link>
         </div>
       </div>
     </section>
@@ -23,23 +24,20 @@
 
 <script>
 import axios from 'axios'
-import AppSpinner from './AppSpinner'
+import asyncDataStatus from '@/mixins/asyncDataStatus.js'
 import { URL_LIST, API_KEY, URL_IMG, IMG_SIZE_AVERAGE } from '../utils/constants.js'
 
 export default {
-  components: {
-    AppSpinner
-  },
-
   data () {
     return {
       filmList: [],
       URL_IMG,
       IMG_SIZE_AVERAGE,
-      loading: true,
       errored: false
     }
   },
+
+  mixins: [asyncDataStatus],
 
   computed: {
     filmChunks () {
@@ -51,7 +49,6 @@ export default {
     axios
       .get(`${URL_LIST}${API_KEY}`)
       .then(response => {
-        console.log(response.data.results)
         this.filmList = response.data.results
       })
       .catch(error => {
@@ -59,7 +56,7 @@ export default {
         this.errored = error
       })
       .finally(() => {
-        this.loading = false
+        this.asyncDataStatusFetched()
       })
   },
 

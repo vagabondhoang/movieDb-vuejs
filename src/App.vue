@@ -1,22 +1,32 @@
 <template>
   <div id="app" class="container">
-    <film-list></film-list>
-    <router-view/>
+    <router-view v-show="showPage" @ready="pageReady" />
+    <AppSpinner v-show="!showPage" />
   </div>
 </template>
 
 <script>
-
-import FilmList from './components/FilmList'
+import AppSpinner from './components/AppSpinner'
 
 export default {
-  name: 'App',
   components: {
-    FilmList
+    AppSpinner
+  },
+
+  data () {
+    return {
+      showPage: false
+    }
+  },
+
+  methods: {
+    pageReady () {
+      this.showPage = true
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

@@ -1,15 +1,29 @@
-// import Vue from 'vue'
-// import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
+import Vue from 'vue'
+import Router from 'vue-router'
+import FilmList from '@/components/FilmList'
+import FilmDetail from '@/components/FilmDetail'
+import NotFound from '@/pages/PageNotFound'
 
-// Vue.use(Router)
+Vue.use(Router)
 
-// export default new Router({
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'HelloWorld',
-//       component: HelloWorld,
-//     },
-//   ],
-// })
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'FilmList',
+      component: FilmList
+    },
+    {
+      path: '/film/:id',
+      name: 'FilmDetail',
+      component: FilmDetail,
+      props: true
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
+    }
+  ],
+  mode: 'history'
+})

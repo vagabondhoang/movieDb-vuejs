@@ -1,4 +1,5 @@
 export const URL_LIST = 'https://api.themoviedb.org/3/movie/popular?api_key='
+export const URL_DETAIL = 'https://api.themoviedb.org/3/movie/'
 
 export const API_KEY_ALT = '&api_key=a90d061d38a0c72d4bb8e58d8289fe45'
 export const API_KEY = 'a90d061d38a0c72d4bb8e58d8289fe45'
