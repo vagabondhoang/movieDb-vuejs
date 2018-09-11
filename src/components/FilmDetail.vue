@@ -5,26 +5,39 @@
         <div v-if="asyncDataStatusReady" class="row">
           <div class="col-sm-6 col-md-4 col-xs-12">
             <img 
-              :src="info.poster_path | pathImage"
-              :alt="info.title"
+              :src="this.$store.state.filmInfo.poster_path | pathImage"
+              :alt="this.$store.state.filmInfo.title"
               class="img-fluid"
             >
           </div>
           <div class="col-sm-6 col-md-4 col-xs-12">
-            <h2>{{info.original_title}}</h2>
+            <h2>{{this.$store.state.filmInfo.original_title}}</h2>
             <h1>Overview: </h1>
-            <p>{{info.overview | trimmedString}}</p>
+            <p>{{this.$store.state.filmInfo.overview | trimmedString}}</p>
             <h1>Release_date</h1>
-            <p>{{info.release_date}}</p>
+            <p>{{this.$store.state.filmInfo.release_date}}</p>
           </div>
         </div>
+      </section>
+      <section v-if="asyncDataStatusReady">
+        <Trailers />
+      </section>
+      <section v-if="asyncDataStatusReady">
+        <Casts />
+      </section>
+      <section v-if="asyncDataStatusReady">
+        <Recommendations />
       </section>
     </div>
 </template>
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
+import Trailers from './Trailers'
+import Casts from './Casts'
+import Recommendations from './Recommendations'
 import asyncDataStatus from '@/mixins/asyncDataStatus.js'
-import { URL_DETAIL, API_KEY, URL_IMG, IMG_SIZE_LARGE } from '../utils/constants.js'
+import defaultImage from '../assets/logo.png'
+import { URL_DETAIL, API_KEY, URL_IMG, IMG_SIZE_LARGE, URL_VIDEO } from '../utils/constants.js'
 
 export default {
   props: {
@@ -32,6 +45,16 @@ export default {
       type: String | Number,
       required: true
     }
+  },
+
+  components: {
+    Trailers,
+    Casts,
+    Recommendations
+  },
+
+  methods: {
+    ...mapActions(['fetchRecommendations', 'fetchTrailers', 'fetchDetailFilm', 'fetchCasts'])
   },
 
   mixins: [asyncDataStatus],
@@ -42,33 +65,28 @@ export default {
     },
 
     pathImage (path) {
-      return path ? `${URL_IMG}${IMG_SIZE_LARGE}${path}` : `../assets/logo.png`
+      return path ? `${URL_IMG}${IMG_SIZE_LARGE}${path}` : `${defaultImage}`
     }
   },
 
-  data () {
-    return {
-      info: {},
-      URL_IMG,
-      IMG_SIZE_LARGE,
-      errored: false,
-    }
-  },
+  created () {
+    const urlDetail = `${URL_DETAIL}${this.id}?api_key=${API_KEY}`
+    const urlTrailers = `${URL_DETAIL}${this.id}${URL_VIDEO}?api_key=${API_KEY}`
+    const urlCast = `${URL_DETAIL}${this.id}/credits?api_key=${API_KEY}`
+    const urlRecommendations = `${URL_DETAIL}${this.id}/recommendations?api_key=${API_KEY}`
 
-  mounted () {
-    axios
-      .get(`${URL_DETAIL}${this.id}?api_key=${API_KEY}`)
-      .then(response => {
-        this.info = response.data
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => {
-        this.asyncDataStatusFetched()
-      })
-  }
+    this.fetchDetailFilm({ urlDetail })
+      .then(this.asyncDataStatusFetched)
+
+    this.fetchTrailers({ urlTrailers })
+      .then(this.asyncDataStatusFetched)
+
+    this.fetchCasts({ urlCast })
+      .then(this.asyncDataStatusFetched)
+
+    this.fetchRecommendations({ urlRecommendations })
+      .then(this.asyncDataStatusFetched)
+  },
 }
 </script>
 <style scoped>

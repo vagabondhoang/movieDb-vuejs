@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Film List goes here</h1>
-    <section v-if="errored">
+    <section v-if="this.$store.state.errored">
       <p>
         We're sorry, we're not able to retrieve this information at the moment, please try back later
       </p>
@@ -11,7 +11,7 @@
         <div v-for="film in chunk" :key="film.id" class="col-sm-3">
           <router-link :to="{name: 'FilmDetail', params: {id: film.id}}">
             <img
-              :src="`${URL_IMG}${IMG_SIZE_AVERAGE}${film.backdrop_path}`" 
+              :src="film.backdrop_path | pathImage" 
               :alt="film.title"
               :id="film.id"
             >
@@ -23,44 +23,36 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
 import asyncDataStatus from '@/mixins/asyncDataStatus.js'
+import defaultImage from '../assets/logo.png'
 import { URL_LIST, API_KEY, URL_IMG, IMG_SIZE_AVERAGE } from '../utils/constants.js'
 
 export default {
-  data () {
-    return {
-      filmList: [],
-      URL_IMG,
-      IMG_SIZE_AVERAGE,
-      errored: false
+  mixins: [asyncDataStatus],
+
+  filters: {
+    pathImage (backdropPath) {
+      return backdropPath ? `${URL_IMG}${IMG_SIZE_AVERAGE}${backdropPath}` : `${defaultImage}`
     }
   },
-
-  mixins: [asyncDataStatus],
 
   computed: {
     filmChunks () {
-      return this.chunk(Object.values(this.filmList), 4)
+      return this.chunk(Object.values(this.$store.state.filmList), 4)
     }
   },
 
-  mounted () {
-    axios
-      .get(`${URL_LIST}${API_KEY}`)
-      .then(response => {
-        this.filmList = response.data.results
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = error
-      })
-      .finally(() => {
-        this.asyncDataStatusFetched()
-      })
+  created () {
+    const urlList = `${URL_LIST}${API_KEY}`
+
+    this.fetchFilmList({ urlList })
+      .then(() => this.asyncDataStatusFetched())
   },
 
   methods: {
+    ...mapActions(['fetchFilmList']),
+
     chunk (input, size) {
       return input.reduce((arr, item, idx) => {
         return idx % size === 0

@@ -9,3 +9,6 @@ export const IMG_SIZE_XSMALL = 'w45'
 export const IMG_SIZE_SMALL = 'w138_and_h175_face'
 export const IMG_SIZE_AVERAGE = 'w250_and_h141_face'
 export const IMG_SIZE_LARGE = 'w342/'
+
+export const URL_VIDEO = '/videos'
+export const URL_YOUTUBE = 'http://youtube.com/embed/'
