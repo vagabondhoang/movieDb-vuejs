@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="container">
-    <router-view v-show="showPage" @ready="pageReady" />
+    <router-view  v-show="showPage" @ready="pageReady" />
     <AppSpinner v-show="!showPage" />
   </div>
 </template>

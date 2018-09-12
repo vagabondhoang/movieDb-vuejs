@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     filmList: [],
+    suggestions: [],
     trailers: [],
     casts: [],
     recommendations: [],
@@ -16,6 +17,8 @@ export default new Vuex.Store({
   },
 
   actions: {
+    searchFilms: ({ dispatch }, { urlSearch }) => dispatch('fetchItem', { endpoint: urlSearch, resource: 'suggestions' }),
+
     fetchFilmList: ({ dispatch }, { urlList }) => dispatch('fetchItem', { endpoint: urlList, resource: 'filmList' }),
 
     fetchDetailFilm: ({ dispatch }, { urlDetail }) => dispatch('fetchItem', { endpoint: urlDetail, resource: 'filmInfo' }),

@@ -6,11 +6,16 @@ import NotFound from '@/pages/PageNotFound'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
       name: 'FilmList',
+      component: FilmList
+    },
+    {
+      path: '/search/:query',
+      name: 'PageSearch',
       component: FilmList
     },
     {
@@ -27,3 +32,10 @@ export default new Router({
   ],
   mode: 'history'
 })
+
+router.beforeEach((to, from, next) => {
+  // console.log(`🚦 navigating to ${to.path} from ${from.path}`)
+  next()
+})
+
+export default router

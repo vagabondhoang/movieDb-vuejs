@@ -12,3 +12,5 @@ export const IMG_SIZE_LARGE = 'w342/'
 
 export const URL_VIDEO = '/videos'
 export const URL_YOUTUBE = 'http://youtube.com/embed/'
+
+export const URL_SEARCH = 'https://api.themoviedb.org/3/search/movie?query='
