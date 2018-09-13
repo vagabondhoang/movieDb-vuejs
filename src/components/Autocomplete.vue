@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-import _ from 'lodash'
+import { debounce } from 'lodash'
 import axios from 'axios'
 import { URL_SEARCH, API_KEY_ALT, URL_IMG, IMG_SIZE_XSMALL } from '../utils/constants.js'
 import defaultImage from '../assets/logo.png'
@@ -46,14 +46,14 @@ export default {
       delay: 500,
       suggestions: [],
       active: false,
-      liIndex: 0
+      liIndex: 0,
     }
   },
 
   watch: {
     query () {
       this.debouncedGetQuery()
-    },
+    }
   },
 
   computed: {
@@ -100,11 +100,11 @@ export default {
 
     removeActive () {
       this.active = false
-    }
+    },
   },
 
   created () {
-    this.debouncedGetQuery = _.debounce(this.handleChange, this.delay)
+    this.debouncedGetQuery = debounce(this.handleChange, this.delay)
   },
 
 }

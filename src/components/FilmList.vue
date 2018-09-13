@@ -56,6 +56,12 @@ export default {
     }
   },
 
+  watch: {
+    $route (to, from) {
+      console.log(to, from)
+    }
+  },
+
   computed: {
     filmChunks () {
       const { filmList } = this.$store.state
@@ -73,11 +79,11 @@ export default {
       axios
         .get(urlSearch)
         .then(response => { this.listFromSuggestions = response.data.results })
-        .then(() => this.asyncDataStatusFetched())
+        .then(this.asyncDataStatusFetched)
     } else {
       const urlList = `${URL_LIST}${API_KEY}`
       this.fetchFilmList({ urlList })
-        .then(() => this.asyncDataStatusFetched())
+        .then(this.asyncDataStatusFetched)
     }
   },
 
