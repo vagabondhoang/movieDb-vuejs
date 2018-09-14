@@ -1,39 +1,45 @@
 <template>
     <div>
-      <section>
-        <h2>Detail goes here</h2>
-        <div v-if="asyncDataStatusReady" class="row">
-          <div class="col-sm-6 col-md-4 col-xs-12">
-            <img 
-              :src="this.$store.state.filmInfo.poster_path | pathImage"
-              :alt="this.$store.state.filmInfo.title"
-              class="img-fluid"
-            >
+      <div class="search">
+        <Autocomplete />
+      </div>
+      <div>
+        <section>
+          <h2>Detail goes here</h2>
+          <div v-if="asyncDataStatusReady" class="row">
+            <div class="col-sm-6 col-md-4 col-xs-12">
+              <img 
+                :src="filmInfo.poster_path | pathImage"
+                :alt="filmInfo.title"
+                class="img-fluid"
+              >
+            </div>
+            <div class="col-sm-6 col-md-4 col-xs-12">
+              <h2>{{filmInfo.original_title}}</h2>
+              <h1>Overview: </h1>
+              <p>{{filmInfo.overview | trimmedString}}</p>
+              <h1>Release_date</h1>
+              <p>{{filmInfo.release_date}}</p>
+            </div>
           </div>
-          <div class="col-sm-6 col-md-4 col-xs-12">
-            <h2>{{this.$store.state.filmInfo.original_title}}</h2>
-            <h1>Overview: </h1>
-            <p>{{this.$store.state.filmInfo.overview | trimmedString}}</p>
-            <h1>Release_date</h1>
-            <p>{{this.$store.state.filmInfo.release_date}}</p>
-          </div>
-        </div>
-      </section>
-      <section v-if="asyncDataStatusReady">
-        <Trailers />
-      </section>
-      <section v-if="asyncDataStatusReady">
-        <Casts />
-      </section>
-      <section v-if="asyncDataStatusReady">
-        <Recommendations />
-      </section>
+        </section>
+        <section v-if="asyncDataStatusReady">
+          <Trailers />
+        </section>
+        <section v-if="asyncDataStatusReady">
+          <Casts />
+        </section>
+        <section v-if="asyncDataStatusReady">
+          <Recommendations />
+        </section>
+      </div>
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Trailers from './Trailers'
 import Casts from './Casts'
+import Autocomplete from './Autocomplete'
 import Recommendations from './Recommendations'
 import asyncDataStatus from '@/mixins/asyncDataStatus.js'
 import defaultImage from '../assets/logo.png'
@@ -47,10 +53,17 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState({
+      filmInfo: state => state.filmInfo
+    })
+  },
+
   components: {
     Trailers,
     Casts,
-    Recommendations
+    Recommendations,
+    Autocomplete
   },
 
   methods: {

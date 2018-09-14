@@ -14,6 +14,11 @@ export default new Router({
       component: FilmList
     },
     {
+      path: '/search/:query',
+      name: 'PageSearch',
+      component: FilmList
+    },
+    {
       path: '/film/:id',
       name: 'FilmDetail',
       component: FilmDetail,
