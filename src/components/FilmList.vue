@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div class="login">
+      <login-modal></login-modal>
+    </div>
     <div class="search">
       <Autocomplete 
         @setSuggestions="setSuggestions"
@@ -33,6 +36,7 @@
 import { mapActions } from 'vuex'
 import axios from 'axios'
 import Autocomplete from './Autocomplete'
+import LoginModal from './LoginModal'
 import asyncDataStatus from '@/mixins/asyncDataStatus.js'
 import defaultImage from '../assets/logo.png'
 import { URL_LIST, API_KEY, URL_IMG, IMG_SIZE_AVERAGE, URL_SEARCH, API_KEY_ALT } from '../utils/constants.js'
@@ -47,7 +51,8 @@ export default {
   mixins: [asyncDataStatus],
 
   components: {
-    Autocomplete
+    Autocomplete,
+    LoginModal,
   },
 
   filters: {
